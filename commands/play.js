@@ -32,7 +32,7 @@ module.exports = {
                 message.reply('¿Te puedes meter a un VC primero? uwu :point_right: :point_left:');
             }
         }
-        
+
         const server_queue = queue.get(message.guild.id);
 
 
@@ -44,7 +44,9 @@ module.exports = {
                 song = {
                     title: song_info.videoDetails.title,
                     url: song_info.videoDetails.video_url,
-                    thumb: song_info.videoDetails.thumbnails[0].url
+                    thumb: song_info.videoDetails.thumbnails[0].url,
+                    desc: song_info.videoDetails.description,
+                    auth: song_info.videoDetails.author
                 }
             } else {
                 const videoFinder = async (query) => {
@@ -57,7 +59,9 @@ module.exports = {
                     song = {
                         title: video.title,
                         url: video.url,
-                        thumb: video.thumbnail
+                        thumb: video.thumbnail,
+                        desc: video.description,
+                        auth: video.author
                     }
                 } else {
                     message.channel.send('Esa madre no está en YT');
@@ -67,6 +71,11 @@ module.exports = {
 
             if (!server_queue) {
                 const player = createAudioPlayer();
+                player.on('error', error => {
+                    console.error(error);
+                    //skip_song(message,server_queue);
+                    message.channel.send('Hubo un error con el audio player:frowning: :point_right: :point_left:')
+                });
                 const queue_constructor = {
                     voice_channel: voice_channel,
                     text_channel: message.channel,
@@ -77,13 +86,13 @@ module.exports = {
                 queue.set(message.guild.id, queue_constructor);
                 queue_constructor.songs.push(song);
                 try {
-                    const connection = await joinVoiceChannel({
+                    const connection1 = await joinVoiceChannel({
                         channelId: message.member.voice.channel.id,
                         guildId: message.guild.id,
                         adapterCreator: message.guild.voiceAdapterCreator
                     });
-                    queue_constructor.connection = connection;
-                    video_player(message.guild, queue_constructor.songs[0]);
+                    queue_constructor.connection = connection1;
+                    video_player(message.guild, queue_constructor.songs[0], client);
                 } catch (err) {
                     queue.delete(message.guild.id)
                     message.channel.send('Hubo un error :frowning: :point_right: :point_left:');
@@ -96,25 +105,25 @@ module.exports = {
                 emb.setTitle(`:arrow_right: ${song.title} agregada a la queue:`)
                     .setAuthor('PLBot', 'https://cdn.discordapp.com/avatars/821913573332353096/d1892f53e0f424f46c99aef169da877d.webp?size=4096')
                     .setColor('ORANGE');
-                    for(x in server_queue.songs){
-                        emb.addField(`${parseInt(x)+1}.- `,`${server_queue.songs[x].title}`,false)
-                    }
-                return message.channel.send({embeds: [emb]});
+                for (x in server_queue.songs) {
+                    emb.addField(`${parseInt(x)+1}.- `, `${server_queue.songs[x].title}`, false)
+                }
+                return message.channel.send({
+                    embeds: [emb]
+                });
             }
-            //if(queue && queue.audio_player.state() === AudioPlayerStatus.Paused) return console.log('despausado')//server_queue.audio_player.play();
         }
         if (cmd === 'fs') skip_song(message, server_queue);
         if (cmd === 'stop' || cmd === 'pause') stop_song(message, server_queue);
 
     }
 }
-const video_player = async (guild, song) => {
+const video_player = async (guild, song, client) => {
     const song_queue = queue.get(guild.id);
     const Discord = require('discord.js');
     if (!song) {
-        //song_queue.voice_channel.leave(); //<=== posible error
         queue.delete(guild.id);
-        song_queue.connection.destroy();////TypeError: Cannot read properties of undefined (reading 'connection')
+        song_queue.audio_player.pause();
         return;
     } else {
         const stream = ytdl(song.url, {
@@ -136,8 +145,9 @@ const video_player = async (guild, song) => {
             .setDescription(`***${song.title}***`)
             .setThumbnail(`${song.thumb}`)
             .setTimestamp()
-            .setFooter(`${song.url}`);
-
+            .setURL(song.url)
+            .setFooter(song.auth.name);
+        //client.user.setActivity(`${song.auth.name}`,{type:'LISTENING'});
         await song_queue.text_channel.send({
             embeds: [emb]
         });
@@ -151,8 +161,25 @@ const skip_song = (message, server_queue) => {
 }
 
 const stop_song = (message, server_queue) => {
+    const Discord = require('discord.js');
     if (!server_queue) return message.channel.send(`No hay canciones en la queue`);
-    server_queue.audio_player.pause();
-
-    //setTimeout(() => server_queue.audio_player.unpause(), 5_000);
+    const emb = new Discord.MessageEmbed();
+    const song = server_queue.songs[0]
+    emb.setAuthor('PLBot', 'https://cdn.discordapp.com/avatars/821913573332353096/d1892f53e0f424f46c99aef169da877d.webp?size=4096')
+        .setColor('RED')
+        .setDescription(`***${song.title}***`)
+        .setThumbnail(`${song.thumb}`)
+        .setTimestamp()
+        .setFooter(song.auth.name);
+    //client.user.setActivity(`${song.auth.name}`,{type:'LISTENING'});
+    if (server_queue.audio_player.state.status == AudioPlayerStatus.Paused) {
+        server_queue.audio_player.unpause();
+        emb.setTitle(':white_check_mark: Despausado')
+    } else {
+        server_queue.audio_player.pause();
+        emb.setTitle(':no_entry: Pausado')
+    }
+    message.channel.send({
+        embeds: [emb]
+    });
 }
