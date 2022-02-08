@@ -13,9 +13,9 @@ const fs = require('fs');
 //const { type } = require('os');
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
-
+const queue = new Map();
 ['command_handler','event_handler'].forEach(handler =>{
-    require(`./handlers/${handler}`)(Discord,client);
+    require(`./handlers/${handler}`)(Discord,client,queue);
 })
 
 client.login(process.env.DISCORD_TOKEN);
