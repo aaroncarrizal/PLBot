@@ -19,10 +19,8 @@ const queue = new Map();
 module.exports = {
     name: 'play',
     aliases: ['p', 'pause', 'fs'],
-    description: 'Joins and plays a video',
-    async execute(Discord, client, message, args, cmd) {
-
-
+    description: 'Joins and plays a song',
+    async execute(Discord,client,message,args,cmd) {
         const voice_channel = message.member.voice.channel;
         if (!voice_channel) {
             let n = Math.random()
@@ -69,38 +67,28 @@ module.exports = {
 
 
             if (!server_queue) {
-                try{
-                    const player = createAudioPlayer();
-                    /*player.on('error', error => {
-                        console.error(error);
-                        //skip_song(message,server_queue);
-                        message.channel.send('Hubo un error con el audio player:frowning: :point_right: :point_left:')
-                    });*/
-                    const queue_constructor = {
-                        voice_channel: voice_channel,
-                        text_channel: message.channel,
-                        connection: null,
-                        songs: [],
-                        audio_player: player
-                    }
-                    queue.set(message.guild.id, queue_constructor);
-                    queue_constructor.songs.push(song);
-                    try {
-                        const connection1 = await joinVoiceChannel({
-                            channelId: message.member.voice.channel.id,
-                            guildId: message.guild.id,
-                            adapterCreator: message.guild.voiceAdapterCreator
-                        });
-                        queue_constructor.connection = connection1;
-                        video_player(message.guild, queue_constructor.songs[0], client);
-                    } catch (err) {
-                        queue.delete(message.guild.id)
-                        message.channel.send('Hubo un error :frowning: :point_right: :point_left:');
-                        throw err;
-                    }
-
-                }catch(err){
-                    message.channel.send('Hubo un error con el audio player:frowning: :point_right: :point_left:')
+                const player = createAudioPlayer();
+                const queue_constructor = {
+                    voice_channel: voice_channel,
+                    text_channel: message.channel,
+                    connection: null,
+                    songs: [],
+                    audio_player: player
+                }
+                queue.set(message.guild.id, queue_constructor);
+                queue_constructor.songs.push(song);
+                try {
+                    const connection1 = await joinVoiceChannel({
+                        channelId: message.member.voice.channel.id,
+                        guildId: message.guild.id,
+                        adapterCreator: message.guild.voiceAdapterCreator
+                    });
+                    queue_constructor.connection = connection1;
+                    video_player(message.guild, queue_constructor.songs[0], client, queue);
+                } catch (err) {
+                    queue.delete(message.guild.id)
+                    message.channel.send('Hubo un error :frowning: :point_right: :point_left:');
+                    throw err;
                 }
 
             } else {
@@ -126,7 +114,7 @@ const video_player = async (guild, song, client) => {
     const song_queue = queue.get(guild.id);
     const Discord = require('discord.js');
     if (!song) {
-        queue.delete(guild.id);
+        //queue.delete(guild.id);
         song_queue.audio_player.stop();
         return;
     } else {
