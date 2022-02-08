@@ -1,5 +1,5 @@
 require ('dotenv').config();
-module.exports = (Discord, client, message) =>{
+module.exports = (Discord, client, queue, message) =>{
     var prefix = process.env.PREFIX;
     
     if(!message.content.startsWith(prefix) || message.author.bot) return;

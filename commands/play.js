@@ -14,7 +14,7 @@ const {
     AudioPlayerStatus
 } = require('@discordjs/voice');
 
-const queue = new Map();
+//const queue = new Map();
 
 module.exports = {
     name: 'play',
@@ -32,6 +32,7 @@ module.exports = {
         }
 
         const server_queue = queue.get(message.guild.id);
+        console.log(queue.get(message.guild.id))
 
         if (cmd === 'play' || cmd === 'p') {
             if (!args.length) return message.channel.send('Alivianeme con una cancion padrino');
@@ -110,7 +111,7 @@ module.exports = {
 
     }
 }
-const video_player = async (guild, song, client) => {
+const video_player = async (guild, song, client, queue) => {
     const song_queue = queue.get(guild.id);
     const Discord = require('discord.js');
     if (!song) {
