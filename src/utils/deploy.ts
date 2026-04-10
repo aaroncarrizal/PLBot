@@ -5,7 +5,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const { CLIENT_ID, TOKEN } = process.env;
+const { CLIENT_ID, TOKEN, GUILD_ID } = process.env;
 
 if (!TOKEN || !CLIENT_ID) {
   throw new Error('Missing TOKEN or CLIENT_ID in environment variables');
@@ -50,12 +50,21 @@ const commandFolders = fs.readdirSync(commandFoldersPath);
   try {
     console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-    const data: any = await rest.put(
-      Routes.applicationCommands(CLIENT_ID), // Change this line for global commands
-      { body: commands },
-    );
+    if (GUILD_ID) {
+      console.log(`Deploying commands to guild: ${GUILD_ID}`);
+      await rest.put(
+        Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+        { body: commands },
+      );
+    } else {
+      console.log('Deploying commands globally...');
+      await rest.put(
+        Routes.applicationCommands(CLIENT_ID),
+        { body: commands },
+      );
+    }
 
-    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
   } catch (error) {
     console.error(error);
   }

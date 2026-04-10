@@ -15,14 +15,14 @@ if (!TOKEN) {
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.GuildIntegrations,
+    //GatewayIntentBits.MessageContent,
+    //GatewayIntentBits.GuildMessageReactions,
+    //GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.AutoModerationExecution,
+    //GatewayIntentBits.DirectMessages,
+    //GatewayIntentBits.GuildMembers,
+    //GatewayIntentBits.GuildVoiceStates,
+    //GatewayIntentBits.AutoModerationExecution,
   ],
 });
 
