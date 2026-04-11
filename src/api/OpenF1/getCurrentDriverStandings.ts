@@ -1,5 +1,5 @@
 import OpenF1API from "./api";
-import { getLatestSession } from "./getLatestSession";
+import { getSession } from "./getSession";
 import { DriverStanding } from "./interfaces/DriverStanding";
 import { OpenF1CacheService } from "../../services/cacheService";
 
@@ -51,7 +51,7 @@ export const getCurrentDriverStandings = async (): Promise<DriverStanding[]> => 
 
   // 3. Full Fallback: Search backwards from latest session
   try {
-    const latestSession = await getLatestSession();
+    const latestSession = await getSession('latest');
     let latestKey = latestSession.session_key;
 
     for (let i = 0; i < MAX_ATTEMPTS && latestKey > 0; i++) {

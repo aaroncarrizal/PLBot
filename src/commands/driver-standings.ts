@@ -43,13 +43,13 @@ export default {
 
 
       embeds.push(mainEmbed);
-      const footerEmbed = new EmbedBuilder().setDescription(`[View Full Standings](https://openf1.org/championships/f1/2026/drivers)`);
-      embeds.push(footerEmbed)
+      // const footerEmbed = new EmbedBuilder().setDescription(`[View Full Standings](https://openf1.org/championships/f1/2026/drivers)`);
+      // embeds.push(footerEmbed)
 
       await interaction.reply({ embeds: embeds });
     } catch (error) {
       console.error(error);
-      await interaction.reply('There was an error getting the latest meeting.');
+      await interaction.reply('There was an error getting the driver standings.');
     }
   },
 };
