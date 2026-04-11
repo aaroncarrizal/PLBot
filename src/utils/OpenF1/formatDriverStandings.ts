@@ -1,7 +1,8 @@
 import { getDriversInfo } from "../../api/OpenF1/getDriversInfo";
 import { DriverStanding } from "../../api/OpenF1/interfaces/DriverStanding";
+import { FormattedDriverStanding } from "../../api/OpenF1/interfaces/FormattedDriverStanding";
 
-export const formatDriverStandings = async (driverStandings: DriverStanding[], sessionKey?: number) => {
+export const formatDriverStandings = async (driverStandings: DriverStanding[], sessionKey?: number): Promise<FormattedDriverStanding[]> => {
   if (!sessionKey) {
     sessionKey = driverStandings[0].session_key;
   }
@@ -10,7 +11,7 @@ export const formatDriverStandings = async (driverStandings: DriverStanding[], s
   driversInfo.sort((a, b) => a.driver_number - b.driver_number);
   driverStandings.sort((a, b) => a.driver_number - b.driver_number);
 
-  const formated = []
+  const formated: FormattedDriverStanding[] = [];
   for (let i = 0; i < driverStandings.length; i++) {
     formated.push({
       name: driversInfo[i].first_name + " " + driversInfo[i].last_name,

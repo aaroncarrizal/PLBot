@@ -11,7 +11,8 @@
     "dev": "nodemon",
     "start:debug": "nest start --debug --watch",
     "start:prod": "bun src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "bun src/utils/seed.ts"
   },
   "author": "dfanso",
   "license": "ISC",
