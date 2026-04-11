@@ -1,6 +1,3 @@
-import axios from "axios";
-
-
 export interface Meeting {
   meeting_key: number
   meeting_name: string
@@ -19,9 +16,4 @@ export interface Meeting {
   date_start: string
   date_end: string
   year: number
-}
-
-export const getLatestMeeting = async (): Promise<Meeting> => {
-  const res = await axios.get<Meeting[]>('https://api.openf1.org/v1/meetings?meeting_key=latest');
-  return res.data[0];
 }
