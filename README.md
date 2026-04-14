@@ -1,6 +1,9 @@
 # Discord Bot Boilerplate
 
+A modern, production-ready Discord bot template with TypeScript, Bun, and MongoDB.
+
 ![Bun](https://img.shields.io/badge/Bun-v1.1-black)
+![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 ![Discord.js](https://img.shields.io/badge/discord.js-v14-blue)
 ![TypeScript](https://img.shields.io/badge/typescript-v5-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -8,28 +11,40 @@
 ![Forks](https://img.shields.io/github/forks/DFanso/discord-bot-boilerplate)
 ![Stars](https://img.shields.io/github/stars/DFanso/discord-bot-boilerplate)
 
-A boilerplate for building Discord bots using TypeScript, Discord.js, and Bun.
+## Quick Start
 
-## Table of Contents
+```sh
+git clone https://github.com/aaroncarrizal/PLBot.git
+cd PLBot
+bun install
+cp .env.example .env  # Add your TOKEN, CLIENT_ID, MONGO_URI
+bun run dev
+```
 
-- [Discord Bot Boilerplate](#discord-bot-boilerplate)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Usage](#usage)
-  - [Project Structure](#project-structure)
-  - [Commands and Events](#commands-and-events)
-    - [Example Command (`src/commands/hello.ts`)](#example-command-srccommandshellots)
-    - [Example Event (`src/events/ready.ts`)](#example-event-srceventsreadyts)
-  - [Contributing](#contributing)
-  - [License](#license)
+## Features
+
+- **TypeScript** - Full type safety for robust development
+- **MongoDB Integration** - Mongoose ODM for database management
+- **Hot Reload** - Nodemon for seamless development experience
+- **Slash Commands** - Native Discord slash command support
+- **Event-Driven Architecture** - Easy command and event loader pattern
+- **Database Seeding** - Seed script for populating initial data
+- **Docker Ready** - Deploy anywhere with Docker
+
+## Prerequisites
+
+- [Bun](https://bun.sh) v1.1+ (runtime)
+- [Node.js](https://nodejs.org/) v20+ (for Docker)
+- [Discord Bot Token](https://discord.com/developers/applications)
+- [MongoDB](https://www.mongodb.com/) (local or [Atlas](https://www.mongodb.com/atlas/database))
 
 ## Installation
 
 1. Clone the repository:
+
    ```sh
-   git clone https://github.com/DFanso/discord-bot-boilerplate.git
-   cd discord-bot-boilerplate
+   git clone https://github.com/aaroncarrizal/PLBot.git
+   cd PLBot
    ```
 
 2. Install the dependencies:
@@ -90,12 +105,14 @@ discord-bot-boilerplate/
 │   ├── dto/
 │   │   └── UserDTO.ts
 │   ├── utils/
-│   │   └── deploy.ts
-│   │   └── database.ts
+│   │   ├── deploy.ts
+│   │   ├── database.ts
+│   │   └── seed.ts
 │   └── index.ts
 ├── package.json
 ├── tsconfig.json
-└── nodemon.json
+├── nodemon.json
+└── Dockerfile
 ```
 
 - **commands/**: Directory for command files.
@@ -139,9 +156,23 @@ export default {
 };
 ```
 
+## Docker Deployment
+
+```sh
+docker build -t discord-bot --build-arg TOKEN=your_token --build-arg CLIENT_ID=your_client_id .
+docker run discord-bot
+```
+
 ## Contributing
 
-Contributions are welcome! Please create a pull request or open an issue to discuss your ideas.
+You can contribute to the original repo at [DFanso/discord-bot-boilerplate](https://github.com/DFanso/discord-bot-boilerplate.git)
+
+## Support
+
+If you encounter any issues or have questions:
+
+- [Open an issue](https://github.com/DFanso/discord-bot-boilerplate/issues)
+- [Discussion forum](https://github.com/DFanso/discord-bot-boilerplate/discussions)
 
 ## License
 
