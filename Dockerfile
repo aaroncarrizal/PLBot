@@ -1,30 +1,28 @@
-# Use the official Node.js image.
-FROM node:20
+# Use the official Bun image.
+FROM oven/bun:1
 
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
-# Copy the package.json and yarn.lock files.
+# Copy the package.json and bun.lockb files.
 COPY package*.json ./
-COPY yarn.lock ./
 
 # Install the dependencies.
-RUN yarn install
+RUN bun install
 
 # Copy the rest of the application files.
 COPY . .
 
-
+ARG TOKEN
+ARG CLIENT_ID
 ARG MONGO_URI
 
+ENV TOKEN=${TOKEN}
+ENV CLIENT_ID=${CLIENT_ID}
 ENV MONGO_URI=${MONGO_URI}
 
-# Build the application.
-RUN yarn build
-RUN yarn deploy
-
-# Use the dist directory for the application
-WORKDIR /usr/src/app
+# Deploy slash commands.
+RUN bun run deploy
 
 # Command to run the application.
-CMD [ "yarn", "start" ]
+CMD [ "bun", "run", "start:prod" ]
