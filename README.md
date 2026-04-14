@@ -1,6 +1,6 @@
-# Discord Bot Boilerplate
+# PLBot
 
-A modern, production-ready Discord bot template with TypeScript, Bun, and MongoDB.
+Based on a modern, production-ready Discord bot template with TypeScript, Bun, and MongoDB.
 
 ![Bun](https://img.shields.io/badge/Bun-v1.1-black)
 ![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
